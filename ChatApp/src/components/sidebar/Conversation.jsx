@@ -1,26 +1,33 @@
-import emoji from "emoji-dictionary";
-const Conversation = () => {
+import useConversation from "../../zustand/useConversation";
+import { UseSocketContext } from "../../Context/SocketContext";
+const Conversation = ({ conversation, emoji, lastidx }) => {
+  const { setSelectedConversation, SelectedConversation } = useConversation();
+  const { onlineuser } = UseSocketContext();
+  const isonlineuser = onlineuser.includes(conversation._id);
+
+  const isselec = SelectedConversation?._id === conversation._id;
+
   return (
     <>
-      <div className="flex gap-3 items-center hover:bg-red-950 p-2 rounded-lg py-2 cursor-pointer">
-        <div className="avatar online">
+      <div
+        className={`flex gap-3 items-center hover:bg-red-950 p-2 rounded-lg py-2 cursor-pointer ${
+          isselec && "bg-red-950"
+        }`}
+        onClick={() => setSelectedConversation(conversation)}
+      >
+        <div className={`avatar ${isonlineuser ? "online" : ""}`}>
           <div className="w-12 rounded-full">
-            <img
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              alt="user avatar"
-            />
+            <img src={conversation.profilepic} alt="user avatar" />
           </div>
         </div>
         <div className="flex flex-col flex-1 ">
           <div className="flex gap-3 justify-between">
-            <p className="font-bold text-white">Hamza Jamil</p>
-            <span className="text-xl">
-              {emoji.getUnicode("man_technologist")}
-            </span>
+            <p className="font-bold text-white">{conversation.fullname}</p>
+            <span className="text-xl">{emoji}</span>
           </div>
         </div>
       </div>
-      <div className="divider my-0 py-0 h-1" />
+      {!lastidx && <div className="divider my-0 py-0 h-1" />}
     </>
   );
 };

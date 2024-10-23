@@ -1,5 +1,29 @@
+import { Link } from "react-router-dom";
 import Gendercheckbox from "./Gendercheckbox";
+import { useState } from "react";
+import useSignup from "../../hooks/useSignup";
+
 const Signup = () => {
+  const [inputs, setinputs] = useState({
+    fullname: "",
+    username: "",
+    password: "",
+    confirmpassword: "",
+    gender: "",
+  });
+
+  const { loading, signup } = useSignup();
+
+  const handlecheckbox = (gender) => {
+    setinputs({ ...inputs, gender });
+  };
+
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    // console.log(signup());
+    await signup(inputs);
+  };
+
   return (
     <div className="flex flex-column item center justify-center min-w-96 mx-auto">
       <div className="w-full p-8 rounded-lg shadow-md  bg-red-700 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-15">
@@ -8,7 +32,7 @@ const Signup = () => {
           <span className="text-black font-bold   animate-pulse ">ChatApp</span>
         </h1>
 
-        <form>
+        <form onSubmit={handlesubmit}>
           <div>
             <label className="label p-2 ">
               <span className="text-1xl text-white mt-1 mb-1 ">Full Name</span>
@@ -17,6 +41,10 @@ const Signup = () => {
               type="text"
               placeholder="Enter Your Name"
               className="input input-bordered w-full   max-w-xs"
+              value={inputs.fullname}
+              onChange={(e) =>
+                setinputs({ ...inputs, fullname: e.target.value })
+              }
             />
           </div>
 
@@ -28,6 +56,10 @@ const Signup = () => {
               type="text"
               placeholder="Enter User"
               className="input input-bordered w-full max-w-xs"
+              value={inputs.username}
+              onChange={(e) =>
+                setinputs({ ...inputs, username: e.target.value })
+              }
             />
           </div>
 
@@ -39,6 +71,10 @@ const Signup = () => {
               type="password"
               placeholder="Password"
               className="input input-bordered w-full max-w-xs"
+              value={inputs.password}
+              onChange={(e) =>
+                setinputs({ ...inputs, password: e.target.value })
+              }
             />
           </div>
 
@@ -52,19 +88,32 @@ const Signup = () => {
               type="password"
               placeholder="ConfrimPassword"
               className="input input-bordered w-full max-w-xs"
+              value={inputs.confirmpassword}
+              onChange={(e) =>
+                setinputs({ ...inputs, confirmpassword: e.target.value })
+              }
             />
           </div>
-          <Gendercheckbox></Gendercheckbox>
+          <Gendercheckbox
+            oncheckbox={handlecheckbox}
+            selectedgender={inputs.gender}
+          ></Gendercheckbox>
 
-          <a
-            href="#"
+          <Link
+            to="/login"
             className="text-md hover-underline hover:text-black text-white mt-1  p-1 inline-block"
           >
             {"Already"} have an account!
-          </a>
+          </Link>
 
           <div>
-            <button className="btn btn-block btn-sm mt-2">SignUp</button>
+            <button className="btn btn-block btn-sm mt-2" disabled={loading}>
+              {loading ? (
+                <span className=" loading loading-spinner"></span>
+              ) : (
+                "Sign Up"
+              )}
+            </button>
           </div>
         </form>
       </div>
@@ -73,21 +122,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-// stater code for the signup components
-// return (
-//   <div className="flex mt-2">
-//     <div className="form-control">
-//       <label className={`label gap-2 cursor-pointer`}>
-//         <span className="label-text text-white">Male</span>
-//         <input type="checkbox" className="checkbox border-slate-900" />
-//       </label>
-//     </div>
-//     <div className="form-control">
-//       <label className={`label gap-2 cursor-pointer`}>
-//         <span className="label-text text-white">FeMale</span>
-//         <input type="checkbox" className="checkbox border-slate-900" />
-//       </label>
-//     </div>
-//   </div>
-// );

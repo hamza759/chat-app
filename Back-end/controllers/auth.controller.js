@@ -1,5 +1,5 @@
 import User from "../models/USER.model.js";
-import bycrypt from "bcryptjs"
+import bcrypt from "bcryptjs"
 import gernatotokenAndsessionCookie from "../utils/generateToken.js";
 
 
@@ -14,8 +14,8 @@ export const signup = async(req, res) => {
         return res.status(409).json({error: "user already exists"});
       }
       // Hash Password
-     const salt = await bycrypt.genSalt(8)
-     const haspass = await bycrypt.hash(password,salt)
+     const salt = await bcrypt.genSalt(8)
+     const haspass = await bcrypt.hash(password,salt)
 
       const boyprofilepic = `https://avatar.iran.liara.run/public/boy?username=${username}`
       const girlprofilepic = `https://avatar.iran.liara.run/public/girl?username=${username}`
@@ -47,7 +47,7 @@ export const signup = async(req, res) => {
 
     } catch (error) {
       console.log("Error is singup controller",error.message)
-      res.status(500).json({error: "internal server error"})
+      res.status(500).json({error: "internal server error in Signup"})
     }
 }
 
@@ -55,15 +55,24 @@ export const signup = async(req, res) => {
 export const login = async (req, res) => {
   try {
      const {username,password}=req.body;
+
+    //  if (!username || !password) {
+    //   return res.status(400).json({ error: "Username and password are required" });
+    // }
+
+
      const user = await User.findOne({username});
      if (!user) {
       return res.status(400).json({error: "User not found!"})
     }
-     const ispasscorrect = await bycrypt.compare(password, user?.password || "");
+
+     const ispasscorrect = await bcrypt.compare(password, user?.password || "");
 
      if (!user || !ispasscorrect) {
        return res.status(400).json({error: "invalid username or password"})
      }
+
+
     gernatotokenAndsessionCookie(user._id,res)
     res.status(200).json({
       _id: user._id,

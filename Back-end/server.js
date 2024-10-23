@@ -7,11 +7,12 @@ import authRoutes from "./routes/auth.route.js"
 import messagesRoutes from "./routes/message.route.js"
 import userRoutes from "./routes/user.route.js"
 
+import {app,server} from './socket/socket.js'
 
 
 import connectMongodb from "./db/connectmongodb.js";
 
-const  app = express();
+// const  app = express();
 
 
 const PORT = process.env.PORT || 5000;//this mean post value should be in .evn folder or 3000
@@ -33,7 +34,7 @@ app.use("/api/users",userRoutes)
 //   res.send("hello world!");
 // });
 
-app.listen(5000,() => {
+server.listen(5000,() => {
    connectMongodb()
   console.log(`Server is running at post ${PORT}`)
 })

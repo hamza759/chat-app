@@ -1,6 +1,6 @@
 import Conversations from "./Conversations";
 import Searchinput from "./Searchinput";
-import LogoutButton from "../LogoutButton";
+import LogoutButton from "./LogoutButton";
 const Sidebar = () => {
   return (
     <div className="border-r border-black  p-4 flex flex-col">
